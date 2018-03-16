@@ -67,6 +67,15 @@ func loadConfig() {
 	}
 }
 
+func generateHTML(w http.ResponseWriter, data interface{}, filenames ...string) {
+	var files []string
+	for _, file := range filenames {
+		files = append(files, fmt.Sprintf("templates/%s.html", file))
+	}
+	template := template.Must(template.ParseFiles(files...))
+	template.ExecuteTemplate(w, "layout", data)
+}
+
 func version() string {
 	return "0.1"
 }
