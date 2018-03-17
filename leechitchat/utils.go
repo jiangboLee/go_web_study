@@ -20,12 +20,12 @@ type Configuration struct {
 }
 
 var (
-	config Configuration
+	Config Configuration
 	logger *log.Logger
 )
 
 //快速打印构造函数
-func p(a ...interface{}) {
+func P(a ...interface{}) {
 	fmt.Println(a)
 }
 
@@ -60,11 +60,43 @@ func loadConfig() {
 		log.Fatalln("不能打开文件", err)
 	}
 	decoder := json.NewDecoder(file)
-	config = Configuration{}
-	err = decoder.Decode(&config)
+	Config = Configuration{}
+	err = decoder.Decode(&Config)
 	if err != nil {
 		log.Fatalln("不能从文件读取json", err)
 	}
+}
+
+//错误信息
+func error_message(rw http.ResponseWriter, req *http.Request, msg string) {
+	url := []string{"/err?msg=", msg}
+	http.Redirect(rw, req, strings.Join(url, ""), 302)
+}
+
+func session(rw http.ResponseWriter, req *http.Request) (sess data.Session, err error) {
+	cookie, err := req.Cookie("_cookie")
+	P(cookie)
+	if err == nil {
+		sess = data.Session{Uuid: cookie.Value}
+		P("找到的session")
+		P(sess)
+		if ok, _ := sess.Check(); !ok {
+			P("okokokokokoko?????????")
+			err = errors.New("无效session")
+		}
+	}
+	return
+}
+
+// parse html
+func parseTemplateFiles(filenames ...string) (t *template.Template) {
+	var files []string
+	t = template.New("layout")
+	for _, file := range filenames {
+		files = append(files, fmt.Sprintf("templates/%s.html", file))
+	}
+	t = template.Must(t.ParseFiles(files...))
+	return
 }
 
 func generateHTML(w http.ResponseWriter, data interface{}, filenames ...string) {
@@ -72,10 +104,27 @@ func generateHTML(w http.ResponseWriter, data interface{}, filenames ...string) 
 	for _, file := range filenames {
 		files = append(files, fmt.Sprintf("templates/%s.html", file))
 	}
-	template := template.Must(template.ParseFiles(files...))
-	template.ExecuteTemplate(w, "layout", data)
+
+	templates := template.Must(template.ParseFiles(files...))
+	templates.ExecuteTemplate(w, "layout", data)
 }
 
-func version() string {
+//logging
+func info(args ...interface{}) {
+	logger.SetPrefix("INFO ")
+	logger.Println(args...)
+}
+
+func danger(args ...interface{}) {
+	logger.SetPrefix("ERROR ")
+	logger.Println(args...)
+}
+
+func warning(args ...interface{}) {
+	logger.SetPrefix("WARNING ")
+	logger.Println(args...)
+}
+
+func Version() string {
 	return "0.1"
 }
