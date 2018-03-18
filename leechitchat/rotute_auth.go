@@ -51,7 +51,10 @@ func signup_account(rw http.ResponseWriter, req *http.Request) {
 		Email:    req.PostFormValue("email"),
 		Password: req.PostFormValue("password"),
 	}
-	if err := user.Create(); err != nil {
+	P("用户")
+	P(user)
+	err = user.Create()
+	if err != nil {
 		danger(err, "不能创建用户")
 	}
 	http.Redirect(rw, req, "/login", 302)

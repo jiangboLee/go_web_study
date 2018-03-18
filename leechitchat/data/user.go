@@ -2,7 +2,6 @@ package data
 
 import (
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
 	"time"
 )
 
@@ -64,7 +63,9 @@ func (session *Session) Check() (valid bool, err error) {
 func (user *User) Create() (err error) {
 	statement := "insert users set uuid=?, name=?, email=?, password=?, created_at=?"
 	stmt, err := Db.Prepare(statement)
+	fmt.Println("newnew")
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
 	defer stmt.Close()

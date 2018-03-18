@@ -5,7 +5,7 @@ import (
 	"crypto/sha1"
 	"database/sql"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/go-sql-driver/mysql"
 	"log"
 )
 
@@ -13,10 +13,12 @@ var Db *sql.DB
 
 func init() {
 	var err error
-	Db, err = sql.Open("mysql", "root:147369@140.143.239.161:3306/chitchat?parseTime=true")
+	Db, err = sql.Open("mysql", "root:147369@tcp(140.143.239.161:3306)/chitchat?parseTime=true")
 	if err != nil {
+		fmt.Println(err)
 		log.Fatal(err)
 	}
+	fmt.Println("db okokok?")
 	return
 }
 
