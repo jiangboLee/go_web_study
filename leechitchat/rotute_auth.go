@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/jiangboLee/go_web_study/leechitchat/data"
+	"./data"
 	"net/http"
 )
 

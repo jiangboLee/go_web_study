@@ -5,7 +5,7 @@ import (
 	"crypto/sha1"
 	"database/sql"
 	"fmt"
-	"github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql"
 	"log"
 )
 
