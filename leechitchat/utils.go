@@ -1,10 +1,10 @@
 package main
 
 import (
-	"./data"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/jiangboLee/go_web_study/leechitchat/data"
 	"html/template"
 	"log"
 	"net/http"
