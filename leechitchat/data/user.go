@@ -49,7 +49,6 @@ func (user *User) Session() (session Session, err error) {
 func (session *Session) Check() (valid bool, err error) {
 	fmt.Println(session.Uuid)
 	err = Db.QueryRow("SELECT id, uuid, email, user_id, created_at FROM sessions WHERE uuid=?", session.Uuid).Scan(&session.Id, &session.Uuid, &session.Email, &session.UserId, &session.CreatedAt)
-	fmt.Println("checkcheck.........")
 	if err != nil {
 		fmt.Println(err)
 		valid = false
