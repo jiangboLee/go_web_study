@@ -46,12 +46,15 @@ func Threads() (threads []Thread, err error) {
 //得到用户谁开始这个帖子
 func (thread *Thread) User() (user User) {
 	user = User{}
-	Db.QueryRow("SELECT * FROM users WHERE id=?", thread.UserId).Scan(&user.Id, &user.Uuid, &user.Name, &user.Email, &user.CreatedAt)
+	Db.QueryRow("SELECT * FROM users WHERE id=?", thread.UserId).Scan(&user.Id, &user.Uuid, &user.Name, &user.Email, &user.Password, &user.CreatedAt)
 	return
 }
 
 func (thread *Thread) CreatedAtDate() string {
-	return thread.CreatedAt.Format("Jan 2, 2006 at 3:00pm")
+	// loc, _ := time.LoadLocation("Local")
+	// AcceptTime:="2015-01-12 16:44:33"
+	// t, _ := time.ParseInLocation("2006-01-02 15:04:05", AcceptTime, loc)
+	return thread.CreatedAt.t.Local().Format("Jan 2, 2006 at 3:11pm")
 }
 
 func (thread *Thread) NumReplies() (count int) {
