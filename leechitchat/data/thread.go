@@ -14,7 +14,7 @@ type Thread struct {
 
 //创建一个新的帖子
 func (user *User) CreateThread(topic string) (conv Thread, err error) {
-	statement := "INSERT threads SET uuid=?, topic=?, user_id=?, create_at=?"
+	statement := "INSERT threads SET uuid=?, topic=?, user_id=?, created_at=?"
 	stmt, err := Db.Prepare(statement)
 	if err != nil {
 		return

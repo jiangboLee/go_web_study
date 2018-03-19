@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./data"
+	_ "./data"
 	// "fmt"
 	"net/http"
 )
@@ -24,11 +24,13 @@ func createThread(rw http.ResponseWriter, req *http.Request) {
 		if err != nil {
 			danger(err, "不能格式表单")
 		}
-		user, err := sess.GetUser()
+		P(sess)
+		user, err := sess.User()
 		if err != nil {
 			danger(err, "不能从session中等到user")
 		}
 		topic := req.PostFormValue("topic")
+		P(topic)
 		if _, err := user.CreateThread(topic); err != nil {
 			danger(err, "不能创建帖子")
 		}
