@@ -54,7 +54,7 @@ func (thread *Thread) CreatedAtDate() string {
 	// loc, _ := time.LoadLocation("Local")
 	// AcceptTime:="2015-01-12 16:44:33"
 	// t, _ := time.ParseInLocation("2006-01-02 15:04:05", AcceptTime, loc)
-	return thread.CreatedAt.t.Local().Format("Jan 2, 2006 at 3:11pm")
+	return thread.CreatedAt.Local().Format("Jan 2, 2006 at 3:11pm")
 }
 
 func (thread *Thread) NumReplies() (count int) {
