@@ -73,6 +73,7 @@ func error_message(rw http.ResponseWriter, req *http.Request, msg string) {
 	http.Redirect(rw, req, strings.Join(url, ""), 302)
 }
 
+//得到这个cookie的session
 func session(rw http.ResponseWriter, req *http.Request) (sess data.Session, err error) {
 	cookie, err := req.Cookie("_cookie")
 	P(cookie)

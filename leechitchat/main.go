@@ -22,6 +22,10 @@ func main() {
 	mux.HandleFunc("/authenticate", authenticate)
 	mux.HandleFunc("/signup", signup)
 	mux.HandleFunc("/signup_account", signup_account)
+	mux.HandleFunc("/logout", logout)
+
+	mux.HandleFunc("/thread/new", newThread)
+	mux.HandleFunc("/thread/create", createThread)
 
 	server := &http.Server{
 		Addr:           Config.Address,

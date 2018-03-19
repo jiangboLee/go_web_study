@@ -59,6 +59,25 @@ func (session *Session) Check() (valid bool, err error) {
 	return
 }
 
+//在数据库删除session
+func (session *Session) DeleteByUUID() (err error) {
+	statement := "DELETE FROM sessions WHERE uuid=?"
+	stmt, err := Db.Prepare(statement)
+	if err != nil {
+		return
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(session.UserId)
+	return
+}
+
+//通过session得到user
+func (session *Session) GetUser() (user User, err error) {
+	user = User{}
+	err = Db.QueryRow("SELECT * FROM users WHERE id=?", session.Uuid).Scan(&user.Id, &user.Uuid, &user.Name, &user.Email, &user.Password, &user.CreatedAt)
+	return
+}
+
 //新建用户
 func (user *User) Create() (err error) {
 	statement := "insert users set uuid=?, name=?, email=?, password=?, created_at=?"
@@ -82,9 +101,6 @@ func (user *User) Create() (err error) {
 //根据用户得到邮箱
 func UserByEmail(email string) (user User, err error) {
 	user = User{}
-	rows, err := Db.Query("SELECT * FROM users WHERE email=?", email)
-	for rows.Next() {
-		err = rows.Scan(&user.Id, &user.Uuid, &user.Name, &user.Email, &user.Password, &user.CreatedAt)
-	}
+	err = Db.QueryRow("SELECT * FROM users WHERE email=?", email).Scan(&user.Id, &user.Uuid, &user.Name, &user.Email, &user.Password, &user.CreatedAt)
 	return
 }

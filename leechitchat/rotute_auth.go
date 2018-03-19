@@ -59,3 +59,14 @@ func signup_account(rw http.ResponseWriter, req *http.Request) {
 	}
 	http.Redirect(rw, req, "/login", 302)
 }
+
+//用户退出
+func logout(rw http.ResponseWriter, req *http.Request) {
+	cookie, err := req.Cookie("_cookie")
+	if err != http.ErrNoCookie {
+		warning(err, "Failed to get cookie")
+		session := data.Session{Uuid: cookie.Value}
+		session.DeleteByUUID()
+	}
+	http.Redirect(rw, req, "/", 302)
+}
