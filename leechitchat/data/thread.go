@@ -74,7 +74,7 @@ func (post *Post) CreatedAtDate() string {
 }
 
 func (user *User) CreatePost(conv Thread, body string) (post Post, err error) {
-	statement := "INSERT posts SET uuid=?, body=?,user_id=?, thread_id=?, created_at=?"
+	statement := "INSERT posts SET uuid=?, body=?, user_id=?, thread_id=?, created_at=?"
 	stmt, err := Db.Prepare(statement)
 	if err != nil {
 		return
@@ -83,6 +83,22 @@ func (user *User) CreatePost(conv Thread, body string) (post Post, err error) {
 	res, err := stmt.Exec(createUUID(), body, user.Id, conv.Id, time.Now())
 	id, err := res.LastInsertId()
 	err = Db.QueryRow("SELECT * FROM posts WHERE id=?", id).Scan(&post.Id, &post.Uuid, &post.Body, &post.UserId, &post.ThreadId, &post.CreatedAt)
+	return
+}
+
+func (thread *Thread) Posts() (posts []Post, err error) {
+	rows, err := Db.Query("SELECT * FROM posts WHERE thread_id=?", thread.Id)
+	if err != nil {
+		return
+	}
+	for rows.Next() {
+		post := Post{}
+		if err = rows.Scan(&post.Id, &post.Uuid, &post.Body, &post.UserId, &post.ThreadId, &post.CreatedAt); err != nil {
+			return
+		}
+		posts = append(posts, post)
+	}
+	rows.Close()
 	return
 }
 
