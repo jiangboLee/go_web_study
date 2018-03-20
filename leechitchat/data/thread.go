@@ -12,6 +12,15 @@ type Thread struct {
 	CreatedAt time.Time
 }
 
+type Post struct {
+	Id        int
+	Uuid      string
+	Body      string
+	UserId    int
+	ThreadId  int
+	CreatedAt time.Time
+}
+
 //创建一个新的帖子
 func (user *User) CreateThread(topic string) (conv Thread, err error) {
 	statement := "INSERT threads SET uuid=?, topic=?, user_id=?, created_at=?"
@@ -51,12 +60,39 @@ func (thread *Thread) User() (user User) {
 }
 
 func (thread *Thread) CreatedAtDate() string {
-	// loc, _ := time.LoadLocation("Local")
-	// AcceptTime:="2015-01-12 16:44:33"
-	// t, _ := time.ParseInLocation("2006-01-02 15:04:05", AcceptTime, loc)
 	return thread.CreatedAt.Local().Format("Jan 2, 2006 at 3:11pm")
+}
+
+func (post *Post) User() (user User) {
+	user = User{}
+	Db.QueryRow("SELECT * FROM users WHERE id=?", post.UserId).Scan(&user.Id, &user.Uuid, &user.Name, &user.Email, &user.Password, &user.CreatedAt)
+	return
+}
+
+func (post *Post) CreatedAtDate() string {
+	return post.CreatedAt.Local().Format("Jan 2, 2006 at 3:11pm")
+}
+
+func (user *User) CreatePost(conv Thread, body string) (post Post, err error) {
+	statement := "INSERT posts SET uuid=?, body=?,user_id=?, thread_id=?, created_at=?"
+	stmt, err := Db.Prepare(statement)
+	if err != nil {
+		return
+	}
+	defer stmt.Close()
+	res, err := stmt.Exec(createUUID(), body, user.Id, conv.Id, time.Now())
+	id, err := res.LastInsertId()
+	err = Db.QueryRow("SELECT * FROM posts WHERE id=?", id).Scan(&post.Id, &post.Uuid, &post.Body, &post.UserId, &post.ThreadId, &post.CreatedAt)
+	return
 }
 
 func (thread *Thread) NumReplies() (count int) {
 	return 2
+}
+
+//根据uuid得到帖子
+func ThreadByUUID(uuid string) (conv Thread, err error) {
+	conv = Thread{}
+	err = Db.QueryRow("SELECT * FROM threads WHERE uuid=?", uuid).Scan(&conv.Id, &conv.Uuid, &conv.Topic, &conv.UserId, &conv.CreatedAt)
+	return
 }
