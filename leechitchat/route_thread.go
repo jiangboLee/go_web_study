@@ -1,8 +1,8 @@
 package main
 
 import (
-	"./data"
 	"fmt"
+	"github.com/jiangboLee/go_web_study/leechitchat/data"
 	"net/http"
 )
 

@@ -103,7 +103,17 @@ func (thread *Thread) Posts() (posts []Post, err error) {
 }
 
 func (thread *Thread) NumReplies() (count int) {
-	return 2
+	rows, err := Db.Query("SELECT count(*) FROM posts WHERE thread_id=?", thread.Id)
+	if err != nil {
+		return
+	}
+	for rows.Next() {
+		if err = rows.Scan(&count); err != nil {
+			return
+		}
+	}
+	rows.Close()
+	return
 }
 
 //根据uuid得到帖子
