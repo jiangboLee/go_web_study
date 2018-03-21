@@ -31,6 +31,7 @@ func (user *User) CreateThread(topic string) (conv Thread, err error) {
 	defer stmt.Close()
 	res, err := stmt.Exec(createUUID(), topic, user.Id, time.Now())
 	if err != nil {
+
 		return
 	}
 	id, err := res.LastInsertId()

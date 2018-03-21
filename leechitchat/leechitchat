@@ -1,0 +1,4 @@
+ERROR 2018/03/20 20:08:19 utils.go:121: Error 1366: Incorrect string value: '\xE5\x8F\x91\xE4\xBA\x86...' for column 'topic' at row 1 不能创建帖子
+ERROR 2018/03/20 20:08:38 utils.go:121: Error 1366: Incorrect string value: '\xE5\xBC\x80\xE8\xA7\x84...' for column 'topic' at row 1 不能创建帖子
+ERROR 2018/03/20 20:19:17 utils.go:121: Error 1366: Incorrect string value: '\xE8\xAF\xB4\xE5\x9C\xB0...' for column 'topic' at row 1 不能创建帖子
+ERROR 2018/03/20 20:19:52 utils.go:121: Error 1366: Incorrect string value: '\xE7\xBC\xB4\xE8\xA7\xA3...' for column 'topic' at row 1 不能创建帖子
